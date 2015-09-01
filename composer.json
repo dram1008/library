@@ -4,6 +4,7 @@
     "keywords": ["yii2", "framework", "basic", "application template"],
     "homepage": "https://github.com/dram1008/library",
     "type": "project",
+    "version": "1.0.0",
     "license": "BSD-3-Clause",
     "minimum-stability": "stable",
     "require": {
