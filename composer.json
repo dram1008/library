@@ -3,7 +3,7 @@
     "description": "Yii 2 Basic Application Template",
     "keywords": ["yii2", "framework", "basic", "application template"],
     "homepage": "https://github.com/dram1008/library",
-    "type": "project",
+    "type": "library",
     "version": "1.0.0",
     "license": "BSD-3-Clause",
     "minimum-stability": "stable",
