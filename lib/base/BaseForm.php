@@ -51,6 +51,8 @@ class BaseForm extends Model
 {
     protected $row;
 
+    public $rules;
+
     public static $fields = [];
 
     const POS_DB_NAME     = 0;
@@ -465,80 +467,96 @@ class BaseForm extends Model
     protected function processUpdateField(&$dbFields, $field)
     {
         $name = $field[0];
-        if (isset($field['widget'])) {
-            $class = $field['widget'][0];
-            if (method_exists($class, 'onUpdate')) {
-                $new = $class::onUpdate($field, $this);
+        $isUpdate = true;
+        if (isset($field['isFieldDb'])) {
+            if ($field['isFieldDb'] == false) {
+                $isUpdate = false;
+            }
+        }
+        if ($isUpdate) {
+            if (isset($field['widget'])) {
+                $class = $field['widget'][0];
+                if (method_exists($class, 'onUpdate')) {
+                    $new = $class::onUpdate($field, $this);
+                    foreach ($new as $k => $v) {
+                        $dbFields[ $k ] = $v;
+                    }
+                }
+                else {
+                    $value = $this->$name;
+                    $value = $this->updateGetValue($value, $field);
+
+                    $dbFields[ $name ] = $value;
+                }
+
+                return;
+            }
+            if (self::getType($field) == 'place') {
+                $new = Place::onUpdate($field, $this);
                 foreach ($new as $k => $v) {
                     $dbFields[ $k ] = $v;
                 }
-            }
-            else {
-                $value = $this->$name;
-                $value = $this->updateGetValue($value, $field);
 
-                $dbFields[ $name ] = $value;
+                return;
             }
+            if (self::getType($field) == 'RadioList') {
+                $new = RadioList::onUpdate($field, $this);
+                foreach ($new as $k => $v) {
+                    $dbFields[ $k ] = $v;
+                }
 
-            return;
+                return;
+            }
+            $value = $this->$name;
+            $value = $this->updateGetValue($value, $field);
+
+            $dbFields[ $name ] = $value;
         }
-        if (self::getType($field) == 'place') {
-            $new = Place::onUpdate($field, $this);
-            foreach ($new as $k => $v) {
-                $dbFields[ $k ] = $v;
-            }
-
-            return;
-        }
-        if (self::getType($field) == 'RadioList') {
-            $new = RadioList::onUpdate($field, $this);
-            foreach ($new as $k => $v) {
-                $dbFields[ $k ] = $v;
-            }
-
-            return;
-        }
-        $value = $this->$name;
-        $value = $this->updateGetValue($value, $field);
-
-        $dbFields[ $name ] = $value;
     }
 
     // если есть метод onInsert и onUpdate то при инсерте нужно выбрать onInsert
     protected function processInsertField(&$dbFields, $field)
     {
         $name = $field[0];
-        if (isset($field['widget'])) {
-            $class = $field['widget'][0];
-            if (method_exists($class, 'onInsert')) {
-                $new = $class::onInsert($field, $this);
+        $isUpdate = true;
+        if (isset($field['isFieldDb'])) {
+            if ($field['isFieldDb'] == false) {
+                $isUpdate = false;
+            }
+        }
+        if ($isUpdate) {
+            if (isset($field['widget'])) {
+                $class = $field['widget'][0];
+                if (method_exists($class, 'onInsert')) {
+                    $new = $class::onInsert($field, $this);
+                    foreach ($new as $k => $v) {
+                        $dbFields[ $k ] = $v;
+                    }
+                }
+
+                return;
+            }
+            if (self::getType($field) == 'place') {
+                $new = Place::onUpdate($field, $this);
                 foreach ($new as $k => $v) {
                     $dbFields[ $k ] = $v;
                 }
+
+                return;
             }
+            if (self::getType($field) == 'RadioList') {
+                $new = RadioList::onUpdate($field, $this);
+                foreach ($new as $k => $v) {
+                    $dbFields[ $k ] = $v;
+                }
 
-            return;
-        }
-        if (self::getType($field) == 'place') {
-            $new = Place::onUpdate($field, $this);
-            foreach ($new as $k => $v) {
-                $dbFields[ $k ] = $v;
+                return;
             }
+            $value = $this->$name;
+            $value = $this->updateGetValue($value, $field);
 
-            return;
+            $dbFields[ $name ] = $value;
         }
-        if (self::getType($field) == 'RadioList') {
-            $new = RadioList::onUpdate($field, $this);
-            foreach ($new as $k => $v) {
-                $dbFields[ $k ] = $v;
-            }
-
-            return;
-        }
-        $value = $this->$name;
-        $value = $this->updateGetValue($value, $field);
-
-        $dbFields[ $name ] = $value;
     }
 
     /**
@@ -604,7 +622,7 @@ class BaseForm extends Model
         }
         $fields = $this->getFieldsFromFormUpdate($fieldsCols);
         if (!is_null($beforeUpdate)) {
-            $fields = call_user_func($beforeUpdate, $fields);
+            $fields = call_user_func($beforeUpdate, $fields, $this);
         }
         (new Query())->createCommand()->update(static::TABLE, $fields, ['id' => $this->id])->execute();
 
@@ -640,7 +658,7 @@ class BaseForm extends Model
         }
         $fields = $this->getFieldsFromFormInsert($fieldsCols);
         if (!is_null($beforeInsert)) {
-            $fields = call_user_func($beforeInsert, $fields);
+            $fields = call_user_func($beforeInsert, $fields, $this);
         }
         (new Query())->createCommand()->insert(static::TABLE, $fields)->execute();
         $fields['id'] = \Yii::$app->db->getLastInsertID();
@@ -649,18 +667,26 @@ class BaseForm extends Model
         // ищу file
         $fieldsUpdate = [];
         foreach ($fieldsCols as $field) {
-            $widget = ArrayHelper::getValue($field, 'widget.0', '');
-            if ($widget != '') {
-                if (!method_exists($widget, 'onInsert')) {
-                    $ret = $widget::onUpdate($field, $this);
-                    foreach ($ret as $k => $v) {
-                        $fieldsUpdate[ $k ] = $v;
+            $isUpdate = true;
+            if (isset($field['isFieldDb'])) {
+                if ($field['isFieldDb'] == false) {
+                    $isUpdate = false;
+                }
+            }
+            if ($isUpdate) {
+                $widget = ArrayHelper::getValue($field, 'widget.0', '');
+                if ($widget != '') {
+                    if (!method_exists($widget, 'onInsert')) {
+                        $ret = $widget::onUpdate($field, $this);
+                        foreach ($ret as $k => $v) {
+                            $fieldsUpdate[ $k ] = $v;
+                        }
                     }
                 }
             }
         }
         if (!is_null($beforeUpdate)) {
-            $fieldsUpdate = call_user_func($beforeUpdate, $fieldsUpdate);
+            $fieldsUpdate = call_user_func($beforeUpdate, $fieldsUpdate, $this);
         }
         if (count($fieldsUpdate) > 0) {
             (new Query())->createCommand()->update(static::TABLE, $fieldsUpdate, ['id' => $fields['id']])->execute();
