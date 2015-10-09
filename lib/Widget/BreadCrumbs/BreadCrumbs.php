@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Дмитрий
- * Date: 14.09.2015
- * Time: 16:19
- */
 
 namespace cs\Widget\BreadCrumbs;
 
@@ -25,14 +19,17 @@ class BreadCrumbs extends Object
      */
     public $items;
 
+    public $home = [
+        'name' => '<i class="fa fa-home"></i>',
+        'url'  => '/',
+    ];
 
     public function run()
     {
         $this->registerAssets();
 
-
         $items = [
-            '<a href="#" class="btn btn-default"><i class="fa fa-home"></i></a>',
+            '<a href="' . $this->home['url'] . '" class="btn btn-default">' . $this->home['name'] . '</a>',
             '<div class="btn btn-default">...</div>',
         ];
         foreach ($this->items as $item) {
