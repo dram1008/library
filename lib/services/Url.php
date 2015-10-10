@@ -26,7 +26,8 @@ class Url
      */
     public function __construct($url = '', $params = [])
     {
-        if ($url != '') {
+        if ($url == '') {
+            $url = \yii\helpers\Url::current([], true);
             $s = parse_url($url);
             $this->scheme = $s['scheme'];
             if (isset($s['query'])) {
@@ -121,19 +122,5 @@ class Url
         }
 
         return $ret;
-    }
-
-    /**
-     * @return string
-     */
-    public function getExtension()
-    {
-        $info = pathinfo($this->path);
-        return $info['extension'];
-    }
-
-    public function read()
-    {
-        return file_get_contents($this->__toString());
     }
 } 
