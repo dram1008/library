@@ -28,24 +28,24 @@ class Url
     {
         if ($url == '') {
             $url = \yii\helpers\Url::current([], true);
-            $s = parse_url($url);
-            $this->scheme = $s['scheme'];
-            if (isset($s['query'])) {
-                $this->query = $s['query'];
-                $q = explode('&', $s['query']);
-                $arr = [];
-                foreach ($q as $item) {
-                    $arr2 = explode('=', $item);
-                    $arr[ urldecode($arr2[0]) ] = urldecode($arr2[1]);
-                }
-                $this->params = ArrayHelper::merge($params, $arr);
-            } else {
-                $this->query = '';
-                $this->params = $params;
-            }
-            $this->host = $s['host'];
-            $this->path = $s['path'];
         }
+        $s = parse_url($url);
+        $this->scheme = $s['scheme'];
+        if (isset($s['query'])) {
+            $this->query = $s['query'];
+            $q = explode('&', $s['query']);
+            $arr = [];
+            foreach ($q as $item) {
+                $arr2 = explode('=', $item);
+                $arr[ urldecode($arr2[0]) ] = urldecode($arr2[1]);
+            }
+            $this->params = ArrayHelper::merge($params, $arr);
+        } else {
+            $this->query = '';
+            $this->params = $params;
+        }
+        $this->host = $s['host'];
+        $this->path = $s['path'];
     }
 
     /**
