@@ -1,0 +1,19 @@
+
+web.php
+
+    'controllerMap' => [
+        'upload'              => 'cs\Widget\FileUploadMany\UploadController',
+        'comment'             => 'app\modules\Comment\Controller',
+        'html_content'        => 'cs\Widget\HtmlContent\Controller',
+        'check_box_tree_mask' => 'cs\Widget\CheckBoxTreeMask\Controller',
+    ],
+
+
+urlRules.php
+
+    'checkBoxTreeMask/add'                                                                 => 'check_box_tree_mask/add',
+    'checkBoxTreeMask/addInto'                                                             => 'check_box_tree_mask/add_into',
+    'checkBoxTreeMask/delete'                                                              => 'check_box_tree_mask/delete',
+
+    'upload/upload'                                                                        => 'upload/upload',
+    'upload/HtmlContent2'                                                                  => 'html_content/upload',
