@@ -1,2 +1,5 @@
+1.1.7
+добавлен /lib/services/EmailChange.php
 1.1.6
 Поправлено \cs\base\BaseForm::find() как параметр может получать массив и воспринимается как условие where
+
