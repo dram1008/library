@@ -1,3 +1,5 @@
+1.1.9
+Заменено в виджете HtmlContent обработка Html через библиотеку lib/services/simplehtmldom_1_5 на обычный replace
 1.1.7
 добавлен /lib/services/EmailChange.php
 1.1.6
