@@ -1,3 +1,5 @@
+1.1.10
+Добавлен плагин lib/plugins/ImageGallery (https://github.com/blueimp/Bootstrap-Image-Gallery)
 1.1.9
 Заменено в виджете HtmlContent обработка Html через библиотеку lib/services/simplehtmldom_1_5 на обычный replace
 1.1.7

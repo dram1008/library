@@ -4,7 +4,7 @@
     "keywords": ["yii2", "framework", "basic", "application template"],
     "homepage": "https://github.com/dram1008/library",
     "type": "library",
-    "version": "1.1.9",
+    "version": "1.1.10",
     "license": "BSD-3-Clause",
     "minimum-stability": "dev",
     "require": {
@@ -20,7 +20,8 @@
         "mistic100/Bootstrap-Confirmation": "*",
         "vlucas/valitron": "~1.2",
         "flesler/jquery.scrollTo": "*",
-        "mobiledetect/mobiledetectlib": "*"
+        "mobiledetect/mobiledetectlib": "*",
+        "blueimp/Bootstrap-Image-Gallery": "*"
     },
     "autoload": {
         "psr-4": {
@@ -47,6 +48,18 @@
                 "version" : "1.0.0",
                 "source": {
                     "url": "https://github.com/mistic100/Bootstrap-Confirmation",
+                    "type": "git",
+                    "reference": "master"
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "blueimp/Bootstrap-Image-Gallery",
+                "version" : "1.0.0",
+                "source": {
+                    "url": "https://github.com/blueimp/Bootstrap-Image-Gallery",
                     "type": "git",
                     "reference": "master"
                 }
