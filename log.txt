@@ -1,3 +1,5 @@
+1.1.11
+Исправил \cs\services\DatePeriod::convertDate
 1.1.10
 Добавлен плагин lib/plugins/ImageGallery (https://github.com/blueimp/Bootstrap-Image-Gallery)
 1.1.9
