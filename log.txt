@@ -1,3 +1,7 @@
+1.1.13
+Исправил lib/services/DatePeriod.php
+1.1.12
+Исправил lib/base/BaseForm.php:222
 1.1.11
 Исправил \cs\services\DatePeriod::convertDate
 1.1.10
