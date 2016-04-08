@@ -1,3 +1,5 @@
+1.2.0
+Добавил lib/Widget/FileUpload3
 1.1.13
 Исправил lib/services/DatePeriod.php
 1.1.12
