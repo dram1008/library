@@ -685,7 +685,7 @@ class BaseForm extends Model
                 $widget = ArrayHelper::getValue($field, 'widget.0', '');
                 if ($widget != '') {
                     if (!method_exists($widget, 'onInsert')) {
-                        $ret = $widget::onUpdate($field, $this);
+                        $ret = $widget::onInsert($field, $this);
                         foreach ($ret as $k => $v) {
                             $fieldsUpdate[ $k ] = $v;
                         }
