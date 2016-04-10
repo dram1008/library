@@ -32,8 +32,10 @@
 
 namespace cs\base;
 
+use app\models\Union;
 use Yii;
 use yii\base\Model;
+use yii\db\Connection;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\VarDumper;
@@ -216,10 +218,10 @@ class BaseForm extends Model
     public static function find($id)
     {
         $where = [];
-        if (is_array($id)) {
-            $where = $id;
-        } else {
+        if (!is_array($id)) {
             $where = ['id' => $id];
+        } else {
+            $where = $id;
         }
         $table = static::TABLE;
         $query = new Query();
