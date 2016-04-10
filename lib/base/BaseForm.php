@@ -684,11 +684,14 @@ class BaseForm extends Model
             if ($isUpdate) {
                 $widget = ArrayHelper::getValue($field, 'widget.0', '');
                 if ($widget != '') {
-                    if (method_exists($widget, 'onInsert')) {
-                        $ret = $widget::onInsert($field, $this);
+                    if (method_exists($widget, 'onUpdate')) {
+                        $ret = $widget::onUpdate($field, $this);
                         foreach ($ret as $k => $v) {
                             $fieldsUpdate[ $k ] = $v;
                         }
+                    } else {
+                        $fieldName = $field[self::POS_DB_NAME];
+                        $fieldsUpdate[ $fieldName ] = $this->$fieldName;
                     }
                 }
             }
